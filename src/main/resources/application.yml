@@ -1,0 +1,52 @@
+#keytool -genkey -alias ssldemo -dname "CN=Andy,OU=kfit,O=kfit,L=HaiDian,ST=BeiJing,C=CN"  -storetype PKCS12 -keyalg RSA -keysize 2048  -keystore keystore.p12 -validity 365  
+hystrix.command.default.execution.timeout.enabled:  false
+#端口号
+server:
+  port: 80
+https:
+  port: 443
+  keystore-file:  keystore.p12
+  keystore-password:  adminLZJ123
+  keystore-type: PKCS12
+#注册服务名称
+spring:
+  application:
+    name: gateway
+  http:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+#向eureka注册信息
+eureka:
+  client:
+    service-url:
+      defaultZone: http://admin:admin123@localhost:6003/eureka
+  instance:
+    hostname: http://localhost
+    prefer-ip-address: true
+#设值ribbon超时时间
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+#路由配置，每次修改一个微服务需要在里面进行对应的修改
+zuul:
+  ssl-hostname-validation-enabled: false
+  #ignoreSecurityHeaders: false
+  #ignored-headers: X-Frame-Options
+  routes:
+    files:
+      path: /demo/**
+      service-id: profruan
+      stripPrefix: false
+    web:
+      sensitive-headers:
+        Access-Control-Allow-Credentials,Access-Control-Allow-Origin,Access-Control-Expose-Headers,X-Frame-Options
+      path: /**
+      stripPrefix: false
+      service-id: web
+logging:
+  file: gateway.log
+  level:
+    com.y.erp: info
+    #com.netflix: debug
+    #org.eclipse.jetty: debug
