@@ -1,5 +1,4 @@
 #keytool -genkey -alias ssldemo -dname "CN=Andy,OU=kfit,O=kfit,L=HaiDian,ST=BeiJing,C=CN"  -storetype PKCS12 -keyalg RSA -keysize 2048  -keystore keystore.p12 -validity 365  
-hystrix.command.default.execution.timeout.enabled:  false
 #端口号
 server:
   port: 80
@@ -11,7 +10,8 @@ https:
 #注册服务名称
 spring:
   application:
-    name: gateway
+    name: profZuul
+  #开启文件上传下载
   http:
     multipart:
       max-file-size: 10MB
@@ -21,24 +21,34 @@ eureka:
   client:
     service-url:
       defaultZone: http://admin:admin123@localhost:6003/eureka
+    #开启健康检查
+    healthcheck:
+        enabled: true
+    #复制实例变化信息到eureka服务器所需要的时间间隔，默认单位为秒，默认时间为30秒
+    instance-info-replication-interval-seconds: 10
   instance:
-    hostname: http://localhost
-    prefer-ip-address: true
+      #eureka注册中心在接收到实例的最后一次心跳后，需等待多久删除该实例，默认单位为秒，默认时间为90秒
+      lease-expiration-duration-in-seconds: 10
+      #该实例需多少秒向eureka注册中心发送心跳，以表明它仍然活着，默认单位为秒，默认时间为30秒
+      lease-renewal-interval-in-seconds: 5
+      metadata-map:
+          my-metada: profZuul
+      #以实例名称显示IP配置
+      preferIpAddress: true
 #设值ribbon超时时间
 ribbon:
   ReadTimeout: 60000
-  ConnectTimeout: 60000
+  SocketTimeout: 60000
 #路由配置，每次修改一个微服务需要在里面进行对应的修改
 zuul:
   ssl-hostname-validation-enabled: false
-  #ignoreSecurityHeaders: false
-  #ignored-headers: X-Frame-Options
   routes:
     files:
       path: /demo/**
-      service-id: profruan
+      service-id: profMain
       stripPrefix: false
     web:
+      #需要过滤的头信息
       sensitive-headers:
         Access-Control-Allow-Credentials,Access-Control-Allow-Origin,Access-Control-Expose-Headers,X-Frame-Options
       path: /**
@@ -46,5 +56,3 @@ zuul:
       service-id: web
 logging:
   file: gateway.log
-  level:
-    com.y.erp: info
