@@ -48,5 +48,3 @@ logging:
   file: gateway.log
   level:
     com.y.erp: info
-    #com.netflix: debug
-    #org.eclipse.jetty: debug
