@@ -39,6 +39,13 @@ eureka:
 ribbon:
   ReadTimeout: 60000
   SocketTimeout: 60000
+hystrix:
+  command: 
+    default: 
+      execution: 
+        isolation: 
+          thread: 
+            timeoutInMilliseconds: 60000
 #路由配置，每次修改一个微服务需要在里面进行对应的修改
 zuul:
   ssl-hostname-validation-enabled: false
