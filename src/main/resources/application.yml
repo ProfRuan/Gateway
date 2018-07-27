@@ -46,8 +46,23 @@ hystrix:
         isolation: 
           thread: 
             timeoutInMilliseconds: 60000
+              threadpool:
+  default:
+    coreSize: 50
+    maximumSize: 10000
+    allowMaximumSizeToDivergeFromCoreSize: true
+    maxQueueSize: -1
+    execution:
+      isolation:
+        thread:
+          timeoutInMilliseconds: 30000000
 #路由配置，每次修改一个微服务需要在里面进行对应的修改
 zuul:
+  #让每个网关都有一个自己的线程池，而不是共用一个线程池
+  ribbon-isolation-strategy: thread
+  thread-pool:
+    use-separate-thread-pools: true
+    thread-pool-key-prefix: zuulgw
   ssl-hostname-validation-enabled: false
   routes:
     files:
