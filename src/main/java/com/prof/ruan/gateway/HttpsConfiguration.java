@@ -32,6 +32,7 @@ public class HttpsConfiguration {
     private String keystorePassword;
 	@Value("${https.keystore-type}")
     private String keystoreType;
+
 	@Bean
     public EmbeddedServletContainerCustomizer servletContainerCustomizer() {
         return new EmbeddedServletContainerCustomizer() {
