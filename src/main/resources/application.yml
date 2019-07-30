@@ -2,11 +2,11 @@
 #端口号
 server:
   port: 80
-https:
-  port: 443
-  keystore-file:  keystore.p12
-  keystore-password:  adminLZJ123
-  keystore-type: PKCS12
+#https:
+    ##  port: 443
+    ##  keystore-file:  keystore.p12
+  ##  keystore-password:  adminLZJ123
+  ##  keystore-type: PKCS12
 #注册服务名称
 spring:
   application:
@@ -46,7 +46,7 @@ hystrix:
         isolation: 
           thread: 
             timeoutInMilliseconds: 60000
-              threadpool:
+              threadpool:2
   default:
     coreSize: 50
     maximumSize: 10000
@@ -66,9 +66,9 @@ zuul:
   ssl-hostname-validation-enabled: false
   routes:
     files:
-      path: /demo/**
-      service-id: profMain
-      stripPrefix: false
+      path: /auth/**
+      service-id: profAuth
+      stripPrefix: true
     web:
       #需要过滤的头信息
       sensitive-headers:

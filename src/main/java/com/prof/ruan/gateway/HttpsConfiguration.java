@@ -20,7 +20,7 @@ import org.springframework.boot.context.embedded.jetty.JettyEmbeddedServletConta
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+//@Configuration
 public class HttpsConfiguration {
 	@Value("${server.port}")
     private int httpPort;
