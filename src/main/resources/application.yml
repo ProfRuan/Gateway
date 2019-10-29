@@ -8,19 +8,12 @@ server:
   ##  keystore-password:  adminLZJ123
   ##  keystore-type: PKCS12
 #注册服务名称
-spring:
-  application:
-    name: profZuul
-  #开启文件上传下载
-  http:
-    multipart:
-      max-file-size: 10MB
-      max-request-size: 20MB
 #向eureka注册信息
 eureka:
   client:
     service-url:
-      defaultZone: http://admin:admin123@localhost:6003/eureka
+      #http://admin:admin123@localhost:6003/eureka
+      defaultZone: http://eureka.didispace.com/eureka/
     #开启健康检查
     healthcheck:
         enabled: true
@@ -46,7 +39,7 @@ hystrix:
         isolation: 
           thread: 
             timeoutInMilliseconds: 60000
-              threadpool:2
+            threadpool: 2
   default:
     coreSize: 50
     maximumSize: 10000
@@ -57,24 +50,45 @@ hystrix:
         thread:
           timeoutInMilliseconds: 30000000
 #路由配置，每次修改一个微服务需要在里面进行对应的修改
-zuul:
-  #让每个网关都有一个自己的线程池，而不是共用一个线程池
-  ribbon-isolation-strategy: thread
-  thread-pool:
-    use-separate-thread-pools: true
-    thread-pool-key-prefix: zuulgw
-  ssl-hostname-validation-enabled: false
-  routes:
-    files:
-      path: /auth/**
-      service-id: profAuth
-      stripPrefix: true
-    web:
-      #需要过滤的头信息
-      sensitive-headers:
-        Access-Control-Allow-Credentials,Access-Control-Allow-Origin,Access-Control-Expose-Headers,X-Frame-Options
-      path: /**
-      stripPrefix: false
-      service-id: web
 logging:
   file: gateway.log
+spring:
+  application:
+    name: profZuul
+      #开启文件上传下载
+  http:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+  redis:
+    host: 127.0.0.1
+    password: admin123
+    database: 0
+    timeout: 0
+    port: 6379
+#security:
+#  oauth2:
+#    client:
+#      access-token-uri: http://localhost/auth/oauth/token
+#      user-authorization-uri: http://localhost/auth/oauth/authorize
+#      client-id: web
+#    resource:
+#      user-info-uri: http://localhost/auth/auth/member
+#      prefer-token-info: false
+zuul:
+    #让每个网关都有一个自己的线程池，而不是共用一个线程池
+      ribbon-isolation-strategy: thread
+      thread-pool:
+        use-separate-thread-pools: true
+        thread-pool-key-prefix: zuulgw
+      ssl-hostname-validation-enabled: false
+      routes:
+        auth:
+          path: /auth/**
+          service-id: profAuth
+        web:
+          #需要过滤的头信息
+          sensitive-headers:
+            Access-Control-Allow-Credentials,Access-Control-Allow-Origin,Access-Control-Expose-Headers,X-Frame-Options
+          path: /**
+          service-id: profWeb
